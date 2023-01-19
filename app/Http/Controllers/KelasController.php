@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Kelas;
+use App\Models\Jurusan;
+use App\Models\Mengajar;
+use App\Models\Siswa;
 
 class KelasController extends Controller
 {
@@ -13,7 +17,9 @@ class KelasController extends Controller
      */
     public function index()
     {
-        //
+        return view('kelas.index', [
+            'kelas' => Kelas::all()
+        ]);
     }
 
     /**
@@ -23,7 +29,9 @@ class KelasController extends Controller
      */
     public function create()
     {
-        //
+        return view('kelas.create', [
+            'jurusan' => Jurusan::all()
+        ]);
     }
 
     /**
@@ -34,7 +42,12 @@ class KelasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama_kelas' => ['required'],
+            'jurusan_id' => ['required']
+        ]);
+        Kelas::create($request->all());
+        return redirect('/kelas/index')->with('success', "Data kelas berhasil ditambahkan");
     }
 
     /**
@@ -54,9 +67,12 @@ class KelasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Kelas $kelas)
     {
-        //
+        return view('kelas.edit', [
+            'kelas' => $kelas,
+            'jurusan' => Jurusan::all()
+        ]);
     }
 
     /**
@@ -66,9 +82,14 @@ class KelasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Kelas $kelas)
     {
-        //
+        $request->validate([
+            'nama_kelas' => ['required'],
+            'jurusan_id' => ['required']
+        ]);
+        $kelas->update($request->all());
+        return redirect('/kelas/index')->with('success', "data kelas berhasil di update");
     }
 
     /**
@@ -77,8 +98,19 @@ class KelasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Kelas $kelas)
     {
-        //
+        $siswa = Siswa::where('kelas_id', $kelas->id)->first();
+        $mengajar = Mengajar::where('kelas_id', $kelas->id)->first();
+
+        if ($siswa) {
+            return back()->with('error', "$kelas->nama_kelas masih digunakan di menu siswa");
+        }
+        if ($mengajar) {
+            return back()->with('error', "$kelas->nama_kelas masih digunakan di menu mengajar");
+        }
+
+        $kelas->delete();
+        return back()->with('success', "Data kelas berhasil dihapus");
     }
 }

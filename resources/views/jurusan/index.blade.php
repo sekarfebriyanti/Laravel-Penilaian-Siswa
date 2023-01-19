@@ -4,6 +4,9 @@
         <b>
             <h2>LIST DATA JURUSAN</h2>
             <a href="/jurusan/create" class="button-primary">TAMBAH DATA JURUSAN</a>
+            @if (session('error'))
+                <p class="text-danger">{{ session('error') }}</p>
+            @endif
             <table cellpadding="5">
                 <tr>
                     <th>NO</th>

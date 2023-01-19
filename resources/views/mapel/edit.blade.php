@@ -13,6 +13,7 @@
                 </td>
             </tr>
             <tr>
+                <td class="bar">
                 <td colspan="2">
                     <center>
                         <button type="submit" class="button-primary">UBAH</button>
