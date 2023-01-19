@@ -111,8 +111,7 @@ class GuruController extends Controller
         }
 
         $guru->delete();
-
-        return redirect('/guru/index')->with('success', 'Data guru berhasil dihapus');
+        return back()->with('success', "Data guru berhasil dihapus");
 
     }
 }
