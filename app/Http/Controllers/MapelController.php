@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Mapel;
 use App\Models\Mengajar;
 
+
 class MapelController extends Controller
 {
     /**
@@ -94,11 +95,12 @@ class MapelController extends Controller
      */
     public function destroy(Mapel $mapel)
     {
-        $mengajar = Mengajar::where('mapel_id', $mapel->mapel_id)->first();
+        $mengajar = Mengajar::where('mapel_id', $mapel->id)->first();
 
         if ($mengajar) {
-            return back()->with('error', "$mapel->nama_mapel masih digunakan di menu mengajar");
+            return back()->with('error', "$mapel->nama_mapel masih digunakan di menu Mengajar");
         }
+
         $mapel->delete();
         return back()->with('success', "Data mata pelajaran berhasil di hapus");
     }
